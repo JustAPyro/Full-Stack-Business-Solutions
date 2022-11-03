@@ -27,6 +27,8 @@ def register_models(api):
     with api.app_context():
         from models import User
         db.create_all()
+        db.session.add(User("Luke", "bacon"))
+        db.session.commit()
 
 
 def register_extensions(api):
