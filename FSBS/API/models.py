@@ -69,17 +69,14 @@ class User(db.Model):
     def get_user(request):
 
         # Get the header from the request
-        auth_header = request.headers.get('Authorization')
-
-        # Get the token out of the header
-        auth_token = ''
-        if auth_header:
-            auth_token = auth_header.split(' ')[1]
-
+        auth_token = request.headers.get('Authorization')
+        print(auth_token)
+        # If we found a token, attempt to get a user from it and return
         if auth_token:
             resp = User.decode_auth_token(auth_token)
-            if not isinstance(resp, str):
-                user = User.query.filter_by(user_id=resp).first()
+            print(resp)
+            if not isinstance(resp[1], str):
+                user = User.query.filter_by(user_id=resp[1]).first()
                 return user
 
         return None
@@ -93,7 +90,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
@@ -113,8 +110,8 @@ class User(db.Model):
         :return: integer|string
         """
         try:
-            payload = jwt.decode(auth_token, secrets['secret_key'])
-            return payload['sub']
+            payload = jwt.decode(auth_token, secrets['secret_key'], algorithms='HS256')
+            return True, payload['sub'], 'Success'
         except jwt.ExpiredSignatureError:
             return False, None, 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
@@ -138,9 +135,15 @@ class Transaction(db.Model):
     # Save the time of the purchase
     purchase_time = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, user_id, location, cost, tax):
+    def __init__(self, user_id, location, cost, tax, purchase_time=None):
         self.user_id = user_id
         self.location = location
         self.cost = cost
         self.tax = tax
-        self.purchase_time = datetime.datetime.now()
+
+        # If the caller provides a date use that, otherwise use now
+        if purchase_time:
+            m, d, y = purchase_time.split('/')
+            self.purchase_time = datetime.datetime(year=int(y), month=int(m), day=int(d))
+        else:
+            self.purchase_time = datetime.datetime.now()

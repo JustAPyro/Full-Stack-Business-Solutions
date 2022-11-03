@@ -2,7 +2,7 @@ import json
 from extensions import bcrypt
 from flask import request, Response
 from extensions import db
-from models import User
+from models import User, Transaction
 
 
 def names():
@@ -15,6 +15,35 @@ def create_user():
 
 def transaction_post():
 
+    # Start by trying to get the requesting user
+    user = User.get_user(request)
+
+    print(user)
+    # If the user couldn't be validated return an error
+    if not user:
+        return "ERROR"
+
+    # Unpack the rest of the information from the request
+    location = request.form.get('location')
+    cost = request.form.get('cost')
+    tax = request.form.get('tax')
+    purchase_time = request.form.get('purchase_time')
+
+    # Create a transaction
+    transaction = Transaction(user.user_id,
+                              location=location,
+                              cost=cost,
+                              tax=tax,
+                              purchase_time=purchase_time)
+
+    # Insert the transaction in the database
+    db.session.add(transaction)
+    db.session.commit()
+
+    return Response(
+        response="Success",
+        status=200,
+        content_type='JSON')
 
 
 
