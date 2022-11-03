@@ -1,5 +1,6 @@
 import jwt
 import json
+from sqlalchemy import ForeignKey
 from extensions import db, bcrypt
 from secrets import secrets
 import datetime
@@ -55,6 +56,7 @@ class User(db.Model):
 
     def to_json(self):
         return json.dumps({
+            'user_id': self.user_id,
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
@@ -98,3 +100,28 @@ class User(db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+class Transaction(db.Model):
+    __tablename__ = 'transactions'
+
+    # The transaction_id and the user_id of the owner
+    transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, ForeignKey('users.user_id'), unique=False, nullable=False)
+
+    # Store the location of the transaction
+    location = db.Column(db.String(255), unique=False, nullable=False)
+
+    # Store the cost and tax of the transaction
+    cost = db.Column(db.Integer, unique=False, nullable=False)
+    tax = db.Column(db.Integer, unique=False, nullable=False)
+
+    # Save the time of the purchase
+    purchase_time = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, user_id, location, cost, tax):
+        self.user_id = user_id
+        self.location = location
+        self.cost = cost
+        self.tax = tax
+        self.purchase_time = datetime.datetime.now()
