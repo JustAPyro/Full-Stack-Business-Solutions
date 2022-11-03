@@ -13,6 +13,12 @@ def create_user():
     return request.form.get('username')
 
 
+def transaction_post():
+
+
+
+
+
 def authorize_user():
     # Collect data
     email = request.form.get('email')

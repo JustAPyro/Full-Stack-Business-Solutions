@@ -66,6 +66,25 @@ class User(db.Model):
         })
 
     @staticmethod
+    def get_user(request):
+
+        # Get the header from the request
+        auth_header = request.headers.get('Authorization')
+
+        # Get the token out of the header
+        auth_token = ''
+        if auth_header:
+            auth_token = auth_header.split(' ')[1]
+
+        if auth_token:
+            resp = User.decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                user = User.query.filter_by(user_id=resp).first()
+                return user
+
+        return None
+
+    @staticmethod
     def encode_auth_token(user_id):
         """
         Generates the Auth Token
@@ -97,9 +116,9 @@ class User(db.Model):
             payload = jwt.decode(auth_token, secrets['secret_key'])
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            return False, None, 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
+            return False, None, 'Invalid token. Please log in again.'
 
 
 class Transaction(db.Model):
