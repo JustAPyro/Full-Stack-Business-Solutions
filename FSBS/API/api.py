@@ -2,7 +2,7 @@ from flask import Flask
 from extensions import db, bcrypt
 from config import current_config
 from secrets import secrets
-from routes import names, create_user
+from routes import names, register_user
 
 
 def create_api(config_object=current_config):
@@ -37,7 +37,7 @@ def register_extensions(api):
 
 def register_urls(api):
     api.add_url_rule('/names.api', 'names', names)
-    api.add_url_rule('/user', methods=['POST'], view_func=create_user)
+    api.add_url_rule('/user', methods=['POST'], view_func=register_user)
 
 
 if __name__ == '__main__':

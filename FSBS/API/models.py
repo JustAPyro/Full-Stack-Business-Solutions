@@ -12,7 +12,7 @@ class User(db.Model):
 
     # Username and password fields
     username = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), unique=False, nullable=False)
 
     # Contact info
     phone = db.Column(db.String(10), unique=True, nullable=True)
@@ -37,6 +37,12 @@ class User(db.Model):
         # Record the register date and also set "now" to last activity
         self.date_registered = datetime.datetime.now()
         self.date_last_active = datetime.datetime.now()
+
+    @staticmethod
+    def validate(username, password, phone=None, email=None):
+        if db.session.query(db.exists().where(User.username == username)).scalar():
+            return False  # Username already exists
+        return True
 
     @staticmethod
     def encode_auth_token(user_id):
