@@ -10,13 +10,17 @@ from routes import (
     transaction_post
 )
 
+dev = False
+if dev:
+    from secrets import secrets
+
 
 def create_api():
     # Create API app
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "default_val")
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", f'postgresql://{secrets["db_user"]}:{secrets["db_pass"]}@localhost/{secrets["db_name"]}')
 
     # Register information to run api
     register_extensions(api)
@@ -49,4 +53,6 @@ def register_urls(api):
 
 
 app = create_api()
+if dev:
+    app.run()
 

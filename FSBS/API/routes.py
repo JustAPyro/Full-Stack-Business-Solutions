@@ -77,8 +77,10 @@ def authorize_user():
 
 
 def register_user():
-    # Collect Data
+    # Collect
+    print("HIT")
     data = request.get_json()
+    print(request.json)
     email = data['email']
     password = data['password']
     first_name = data['first_name']
