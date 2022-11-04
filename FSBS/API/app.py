@@ -16,8 +16,6 @@ def create_api(config_object=current_config):
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config.from_object(config_object)
-    # api.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{secrets["db_user"]}:{secrets["db_pass"]}@localhost/{api.config.get("DB_NAME")}'
     api.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gxxgezcatnkide:9ab7f8472e5f4e3131d2981ac03cee086b016513783a58d8c7d7cf1aa5fa09c9@ec2-44-210-228-110.compute-1.amazonaws.com:5432/d1cdnfqhn9j845'
 
     # Register information to run api
