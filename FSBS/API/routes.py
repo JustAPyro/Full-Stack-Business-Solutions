@@ -51,8 +51,9 @@ def transaction_post():
 
 def authorize_user():
     # Collect data
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
 
     # Find the user in the database
     user = User.query.filter_by(email=email).first()
@@ -78,9 +79,7 @@ def authorize_user():
 
 def register_user():
     # Collect
-    print("HIT")
     data = request.get_json()
-    print(request.json)
     email = data['email']
     password = data['password']
     first_name = data['first_name']
