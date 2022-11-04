@@ -78,11 +78,12 @@ def authorize_user():
 
 def register_user():
     # Collect Data
-    email = request.form.get('email')
-    password = request.form.get('password')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    phone = request.form.get('phone')
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    phone = data['phone']
 
     # Validate data
     validation_errors = User.validator(email, password, first_name, last_name, phone)
