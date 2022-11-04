@@ -3,7 +3,7 @@ from extensions import db, bcrypt
 from config import current_config
 from secrets import secrets
 from routes import (
-    names,
+    test_func,
     register_user,
     authorize_user,
     transaction_post
@@ -43,11 +43,11 @@ def register_extensions(api):
 
 
 def register_urls(api):
-    api.add_url_rule('/names.api', 'names', names)
+    api.add_url_rule('/test', methods=['GET', 'POST'], view_func=test_func)
     api.add_url_rule('/register', methods=['POST'], view_func=register_user)
     api.add_url_rule('/authorize', methods=['POST'], view_func=authorize_user)
     api.add_url_rule('/transaction', methods=['POST'], view_func=transaction_post)
 
 
 if __name__ == '__main__':
-    create_api().run()
+    create_api().run(host='192.168.1.213', port=5000, ssl_context='adhoc')

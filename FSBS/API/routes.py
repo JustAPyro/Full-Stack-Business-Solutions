@@ -5,8 +5,8 @@ from extensions import db
 from models import User, Transaction
 
 
-def names():
-    return '{"name": "Luke", "last": "Hanna", "dob": "10/02/1997"}'
+def test_func():
+    return '{"message": "Hello world!"}'
 
 
 def create_user():
