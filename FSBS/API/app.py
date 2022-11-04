@@ -11,8 +11,7 @@ from routes import (
 )
 
 dev = False
-if dev:
-    from secrets import secrets
+
 
 
 def create_api():
