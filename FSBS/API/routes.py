@@ -5,6 +5,10 @@ from extensions import db
 from models import User, Transaction
 
 
+def hello():
+    return "Welcome!"
+
+
 def test_func():
     return '{"message": "Hello world!"}'
 
@@ -14,7 +18,6 @@ def create_user():
 
 
 def transaction_post():
-
     # Start by trying to get the requesting user
     user = User.get_user(request)
 
@@ -44,8 +47,6 @@ def transaction_post():
         response="Success",
         status=200,
         content_type='JSON')
-
-
 
 
 def authorize_user():
