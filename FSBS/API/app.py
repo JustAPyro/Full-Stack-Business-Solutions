@@ -19,7 +19,7 @@ def create_api():
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", 'default')
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", 'Default')
 
     # Register information to run api
     register_extensions(api)

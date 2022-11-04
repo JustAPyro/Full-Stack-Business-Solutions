@@ -51,15 +51,29 @@ def transaction_post():
 
 def authorize_user():
     # Collect data
+    print("hit")
     data = request.get_json()
+
+    if not data:
+        return Response(
+            response=json.dumps({
+                   "message": "Please provide user details",
+                   "data": None,
+                   "error": "Bad request"}),
+            status=400,
+            content_type='JSON')
+
     email = data['email']
     password = data['password']
-
+    print('found data')
     # Find the user in the database
     user = User.query.filter_by(email=email).first()
+    print('found user')
 
     if user and bcrypt.check_password_hash(user.password, password):
+        print('bcrypt in')
         auth_token = user.encode_auth_token(user.user_id)
+        print('token gen')
         if auth_token:
             return Response(
                 response=json.dumps({'auth_token': auth_token}),

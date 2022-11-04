@@ -97,7 +97,7 @@ class User(db.Model):
             }
             return jwt.encode(
                 payload,
-                api_key=os.environ.get("AUTH_KEY_SECRET", "default_val"),
+                key=os.environ.get("AUTH_KEY_SECRET", "Default"),
                 algorithm='HS256'
             )
         except Exception as e:
