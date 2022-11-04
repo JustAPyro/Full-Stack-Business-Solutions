@@ -1,7 +1,5 @@
 from flask import Flask
 from extensions import db, bcrypt
-from config import current_config
-from secrets import secrets
 from routes import (
     hello,
     test_func,
@@ -11,7 +9,7 @@ from routes import (
 )
 
 
-def create_api(config_object=current_config):
+def create_api():
     # Create API app
     api = Flask(__name__)
 

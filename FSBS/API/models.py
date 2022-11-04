@@ -1,8 +1,9 @@
+import os
+
 import jwt
 import json
 from sqlalchemy import ForeignKey
 from extensions import db, bcrypt
-from secrets import secrets
 import datetime
 
 
@@ -96,7 +97,7 @@ class User(db.Model):
             }
             return jwt.encode(
                 payload,
-                secrets['secret_key'],
+                api_key=os.environ.get("AUTH_KEY_SECRET", "default_val"),
                 algorithm='HS256'
             )
         except Exception as e:
