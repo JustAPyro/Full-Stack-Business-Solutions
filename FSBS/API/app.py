@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from extensions import db, bcrypt
 from routes import (
@@ -14,7 +16,7 @@ def create_api():
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gxxgezcatnkide:9ab7f8472e5f4e3131d2981ac03cee086b016513783a58d8c7d7cf1aa5fa09c9@ec2-44-210-228-110.compute-1.amazonaws.com:5432/d1cdnfqhn9j845'
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "default_val"),
 
     # Register information to run api
     register_extensions(api)
