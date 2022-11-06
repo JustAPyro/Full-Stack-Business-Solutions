@@ -2,3 +2,4 @@
 .idea/
 secrets.py
 /Scripts/mig.csv
+/FSBS/API/Run_As_Dev.py
