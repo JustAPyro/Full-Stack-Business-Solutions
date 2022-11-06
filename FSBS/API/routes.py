@@ -6,10 +6,6 @@ from models import User, Transaction
 
 
 def hello():
-    return "Welcome!"
-
-
-def test_func():
     return '{"message": "Hello world!"}'
 
 
@@ -57,9 +53,9 @@ def authorize_user():
     if not data:
         return Response(
             response=json.dumps({
-                   "message": "Please provide user details",
-                   "data": None,
-                   "error": "Bad request"}),
+                "message": "Please provide user details",
+                "data": None,
+                "error": "Bad request"}),
             status=400,
             content_type='JSON')
 
