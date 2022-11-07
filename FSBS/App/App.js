@@ -9,7 +9,15 @@ const App = () => {
 
     const loginBtnHandler = () => {
         api_auth({email: input_email, pass: input_pass})
-            .then((out) => {console.log(out)})
+            .then((response) => {
+                if (response.hasOwnProperty('ERROR')) {
+                    alert("Failed to log in")
+                }
+                if (response.hasOwnProperty('auth_token')) {
+                    alert("Here's your login: " + response.auth_token)
+                    console.log("Logged in!")
+                }
+            })
     }
 
   return (
@@ -71,7 +79,7 @@ const api_auth = (props) => {
       })})
       .then((response) => response.text())
       .then((json) => {
-          return json
+          return JSON.parse(json)
       })
       .catch((error) => {
           console.error(error);

@@ -82,7 +82,7 @@ def authorize_user():
                 content_type='JSON')
 
     return Response(  # TODO: Add a better response here
-        response=json.dumps({'FAIL': "ERROR"}),
+        response=json.dumps({'ERROR': "ERROR"}),
         status=401,
         content_type='JSON')
 
