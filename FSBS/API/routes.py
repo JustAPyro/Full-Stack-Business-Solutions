@@ -61,10 +61,12 @@ def authorize_user():
 
     email = data['email']
     password = data['password']
-    print('found data')
+
+    # Process the email by forcing it to lower
+    email = email.lower()
+
     # Find the user in the database
     user = User.query.filter_by(email=email).first()
-    print('found user')
 
     if user and bcrypt.check_password_hash(user.password, password):
         print('bcrypt in')
