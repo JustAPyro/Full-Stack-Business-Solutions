@@ -38,7 +38,10 @@ def transaction_post():
     location = data['location']
     cost = data['cost']
     tax = data['tax']
+    print(location)
     purchase_time = data.get('time', None)
+
+
 
     # Create a transaction
     transaction = Transaction(user.user_id,

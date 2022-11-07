@@ -142,10 +142,8 @@ const api_post_transaction = (props) => {
                 tax: props.tax
             })
         })
-            .then((response) => response.text())
-            .then((json) => {
-                console.log(json)
-                return JSON.parse(json)
+            .then((response) => {
+                if (response.status === 200) {alert("Transaction posted successfully!")}
             })
             .catch((error) => {
                 console.error(error);
