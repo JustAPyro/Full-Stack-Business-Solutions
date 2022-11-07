@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 import { LabeledTextInput } from './components/LabeledTextInput'
+import { TextInputGroup } from "./components/TextInputGroup";
 import { useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -8,16 +9,22 @@ import * as SecureStore from 'expo-secure-store';
 
 
 
-function NewPage({ navigation }) {
+function NewTransactionPage({ navigation }) {
+    const [transactionLocation, setLocation] = useState()
+    const [transactionAmount, setAmount] = useState()
+    const [transactionTax, setTax] = useState()
+
     return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
+        <LabeledTextInput textHeader="Location" callback={setLocation} />
+        <LabeledTextInput textHeader="$ Amount" callback={setAmount} />
+        <LabeledTextInput textHeader="Tax" callback={setTax} />
         <Button
-
+            title={"Submit"}
             onPress={() => {
             SecureStore.getItemAsync('auth_token')
                 .then((x) => {alert(x)})}}
-        title={"Check"}/>
+        />
     </View>
   );
 }
@@ -56,9 +63,9 @@ function LoginPage({ navigation }) {
 const Stack = createNativeStackNavigator();
 function App() {
     return <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="NewTransaction">
             <Stack.Screen name="Login" component={LoginPage} />
-            <Stack.Screen name="Details" component={NewPage} />
+            <Stack.Screen name="NewTransaction" component={NewTransactionPage} />
         </Stack.Navigator>
     </NavigationContainer>
 }
@@ -94,8 +101,6 @@ const api_signup = (props) => {
         });
 };
 
-
-
 const api_auth = (props) => {
   return fetch('https://fullstackbusinesssolutions.herokuapp.com/authorize', {
       method: 'POST',
@@ -112,6 +117,28 @@ const api_auth = (props) => {
           return JSON.parse(json)
       })
       .catch((error) => {
+          console.error(error);
+      });
+};
+
+const api_post_transaction = (props) => {
+
+    return fetch('https://fullstackbusinesssolutions.herokuapp.com/transaction', {
+        method: 'POST',
+        headers: {
+            Accept: '*/*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            location: props.location,
+            cost: props.cost,
+            tax: props.tax
+        })})
+        .then((response) => response.text())
+        .then((json) => {
+          return JSON.parse(json)
+      })
+        .catch((error) => {
           console.error(error);
       });
 };

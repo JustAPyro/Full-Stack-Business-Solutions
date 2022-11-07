@@ -17,7 +17,6 @@ def transaction_post():
     # Start by trying to get the requesting user
     user = User.get_user(request)
 
-    print(user)
     # If the user couldn't be validated return an error
     if not user:
         return "ERROR"
