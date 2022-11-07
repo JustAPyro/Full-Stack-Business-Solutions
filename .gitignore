@@ -1,4 +1,5 @@
 /Runtimes/Python/venv/
+__pycache__/
 .idea/
 secrets.py
 /Scripts/mig.csv
