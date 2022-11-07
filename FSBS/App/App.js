@@ -13,11 +13,11 @@ function NewPage({ navigation }) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details Screen</Text>
         <Button
-            title="Log In"
+
             onPress={() => {
             SecureStore.getItemAsync('auth_token')
-                .then((x) => {alert(x)})
-        }}/>
+                .then((x) => {alert(x)})}}
+        title={"Check"}/>
     </View>
   );
 }
@@ -33,8 +33,8 @@ function LoginPage({ navigation }) {
                     alert("Failed to log in")
                 }
                 if (response.hasOwnProperty('auth_token')) {
-                    SecureStore.setItemAsync('auth_token', response.auth_token)
-                    navigation.navigate('Details').catch((error) => console.error(error))
+                    void SecureStore.setItemAsync('auth_token', response.auth_token)
+                    void navigation.navigate('Details')
                 }
             })
             .catch((error) => console.error(error))
