@@ -1,5 +1,4 @@
 import os
-from secrets import dbloc
 from flask import Flask
 from extensions import db, bcrypt
 from routes import (
@@ -15,7 +14,7 @@ def create_api():
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", dbloc)
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "Default")
 
     # Register information to run api
     register_extensions(api)

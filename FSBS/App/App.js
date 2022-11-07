@@ -4,17 +4,19 @@ import {LabeledTextInput} from './components/LabeledTextInput'
 import {useState} from "react";
 
 const App = () => {
-    const [email, setEmail] = useState()
-    const [pass, setPass] = useState()
+    const [input_email, setEmail] = useState()
+    const [input_pass, setPass] = useState()
 
     const loginBtnHandler = () => {
-        console.log("Login button pressed!")
+        console.log("Button is being hit!")
+        console.log(input_email)
+        api_auth({email: input_email, pass:input_pass})
     }
 
   return (
     <View style={styles.container}>
-      <LabeledTextInput text="E-mail:" />
-      <LabeledTextInput text="Password:" />
+      <LabeledTextInput textHeader="E-mail:" callback={setEmail}/>
+      <LabeledTextInput textHeader="Password:" callback={setPass}/>
       <Button
           title={"Log In"}
           onPress={loginBtnHandler}
