@@ -14,6 +14,14 @@ function NewTransactionPage({ navigation }) {
     const [transactionAmount, setAmount] = useState()
     const [transactionTax, setTax] = useState()
 
+    const submitBtnHandler = () => {
+        api_post_transaction({
+            location: transactionLocation,
+            cost: transactionAmount,
+            tax: transactionTax
+        })
+    };
+
     return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LabeledTextInput textHeader="Location" callback={setLocation} />
@@ -21,9 +29,7 @@ function NewTransactionPage({ navigation }) {
         <LabeledTextInput textHeader="Tax" callback={setTax} />
         <Button
             title={"Submit"}
-            onPress={() => {
-            SecureStore.getItemAsync('auth_token')
-                .then((x) => {alert(x)})}}
+            onPress={submitBtnHandler}
         />
     </View>
   );
@@ -37,11 +43,11 @@ function LoginPage({ navigation }) {
         api_auth({email: input_email, pass: input_pass})
             .then((response) => {
                 if (response.hasOwnProperty('ERROR')) {
-                    alert("Failed to log in")
+                    alert("Failed to log in. Error: " + response.ERROR)
                 }
                 if (response.hasOwnProperty('auth_token')) {
-                    void SecureStore.setItemAsync('auth_token', response.auth_token)
-                    void navigation.navigate('Details')
+                    void SecureStore.setItemAsync('Authorization', response.auth_token)
+                    void navigation.navigate('NewTransaction')
                 }
             })
             .catch((error) => console.error(error))
@@ -63,7 +69,7 @@ function LoginPage({ navigation }) {
 const Stack = createNativeStackNavigator();
 function App() {
     return <NavigationContainer>
-        <Stack.Navigator initialRouteName="NewTransaction">
+        <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Login" component={LoginPage} />
             <Stack.Screen name="NewTransaction" component={NewTransactionPage} />
         </Stack.Navigator>
@@ -122,25 +128,29 @@ const api_auth = (props) => {
 };
 
 const api_post_transaction = (props) => {
-
-    return fetch('https://fullstackbusinesssolutions.herokuapp.com/transaction', {
-        method: 'POST',
-        headers: {
-            Accept: '*/*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            location: props.location,
-            cost: props.cost,
-            tax: props.tax
-        })})
-        .then((response) => response.text())
-        .then((json) => {
-          return JSON.parse(json)
-      })
-        .catch((error) => {
-          console.error(error);
-      });
+    SecureStore.getItemAsync('Authorization').then((auth) => {
+        return fetch('https://fullstackbusinesssolutions.herokuapp.com/transaction', {
+            method: 'POST',
+            headers: {
+                Accept: '*/*',
+                'Content-Type': 'application/json',
+                'Authorization': auth
+            },
+            body: JSON.stringify({
+                location: props.location,
+                cost: props.cost,
+                tax: props.tax
+            })
+        })
+            .then((response) => response.text())
+            .then((json) => {
+                console.log(json)
+                return JSON.parse(json)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }).catch((error) => {console.error(error)})
 };
 
 const styles = StyleSheet.create({

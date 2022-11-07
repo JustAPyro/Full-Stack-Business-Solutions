@@ -19,7 +19,7 @@ def transaction_post():
 
     # If the user couldn't be validated return an error
     if not user:
-        return "ERROR"
+        return "{ERROR: Could not find user}"
 
     # Now get the json from the request
     data = request.get_json()
@@ -95,7 +95,7 @@ def authorize_user():
                 content_type='JSON')
 
     return Response(  # TODO: Add a better response here
-        response=json.dumps({'ERROR': "ERROR"}),
+        response=json.dumps({'ERROR': "User could not be found."}),
         status=401,
         content_type='JSON')
 
