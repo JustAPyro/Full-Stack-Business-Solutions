@@ -8,9 +8,8 @@ const App = () => {
     const [input_pass, setPass] = useState()
 
     const loginBtnHandler = () => {
-        console.log("Button is being hit!")
-        console.log(input_email)
-        api_auth({email: input_email, pass:input_pass})
+        api_auth({email: input_email, pass: input_pass})
+            .then((out) => {console.log(out)})
     }
 
   return (
@@ -72,7 +71,7 @@ const api_auth = (props) => {
       })})
       .then((response) => response.text())
       .then((json) => {
-          console.log(json)
+          return json
       })
       .catch((error) => {
           console.error(error);
