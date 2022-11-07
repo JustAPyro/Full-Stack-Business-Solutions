@@ -148,3 +148,17 @@ class Transaction(db.Model):
             self.purchase_time = datetime.datetime(year=int(y), month=int(m), day=int(d))
         else:
             self.purchase_time = datetime.datetime.now()
+
+    @staticmethod
+    def validator(location, cost, tax, purchase_time):
+        # Map to store the errors in
+        errors = []
+
+        if not location:
+            errors.append("TRANSACTION LOCATION MISSING ERROR")
+        if not cost:
+            errors.append("TRANSACTION COST MISSING ERROR")
+        if not tax:
+            errors.append("TRANSACTION TAX MISSING ERROR")
+
+        return errors

@@ -1,8 +1,6 @@
+import json
 
-
-
-
-
+from flask import Response
 
 valid_content_types = [
     'application/json'
@@ -22,3 +20,10 @@ def get_request_data(content_type: str, request) -> dict[str, str]:
 
         # Parse the json
 
+
+def construct_error_response(status_code: int, body: str):
+    return Response(
+        response=body,
+        status=status_code,
+        content_type='JSON'
+    )

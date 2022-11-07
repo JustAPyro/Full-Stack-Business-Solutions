@@ -3,6 +3,7 @@ from extensions import bcrypt
 from flask import request, Response
 from extensions import db
 from models import User, Transaction
+from server_util import construct_error_response
 
 
 def hello():
@@ -41,7 +42,10 @@ def transaction_post():
     print(location)
     purchase_time = data.get('time', None)
 
-
+    # Validate data
+    validation_errors = Transaction.validator(location, cost, tax, purchase_time)
+    if len(validation_errors) > 0:
+        return construct_error_response(400, json.dumps(validation_errors))
 
     # Create a transaction
     transaction = Transaction(user.user_id,
