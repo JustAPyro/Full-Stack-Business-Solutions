@@ -21,11 +21,24 @@ def transaction_post():
     if not user:
         return "ERROR"
 
+    # Now get the json from the request
+    data = request.get_json()
+
+    # If there's no data throw an error
+    if not data:
+        return Response(
+            response=json.dumps({
+                "message": "Please provide user details",
+                "data": None,
+                "error": "Bad request"}),
+            status=400,
+            content_type='JSON')
+
     # Unpack the rest of the information from the request
-    location = request.form.get('location')
-    cost = request.form.get('cost')
-    tax = request.form.get('tax')
-    purchase_time = request.form.get('purchase_time')
+    location = data['location']
+    cost = data['cost']
+    tax = data['tax']
+    purchase_time = data.get('time', None)
 
     # Create a transaction
     transaction = Transaction(user.user_id,
@@ -46,7 +59,6 @@ def transaction_post():
 
 def authorize_user():
     # Collect data
-    print("hit")
     data = request.get_json()
 
     if not data:
