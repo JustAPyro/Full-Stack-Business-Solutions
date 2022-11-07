@@ -3,8 +3,17 @@ import {Alert, Button, StyleSheet, View} from 'react-native';
 import {LabeledTextInput} from './components/LabeledTextInput'
 import {useState} from "react";
 import { NavigationContainer } from '@react-navigation/native';
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
-const App = () => {
+function NewPage() {
+    return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Details Screen</Text>
+    </View>
+  );
+}
+
+function LoginPage() {
     const [input_email, setEmail] = useState()
     const [input_pass, setPass] = useState()
 
@@ -32,6 +41,16 @@ const App = () => {
       <StatusBar style="auto" />
     </View>
   );
+}
+
+const Stack = createNativeStackNavigator();
+function App() {
+    return <NavigationContainer>
+        <Stack.Navigator initialRouteName="LoginPage">
+            <Stack.Screen name="Login" component={LoginPage} />
+            <Stack.Screen name="Details" component={NewPage} />
+        </Stack.Navigator>
+    </NavigationContainer>
 }
 
 
@@ -97,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default LoginPage;
