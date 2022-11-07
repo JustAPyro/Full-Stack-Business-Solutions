@@ -1,19 +1,28 @@
-import {StatusBar} from 'expo-status-bar';
-import {Alert, Button, StyleSheet, View} from 'react-native';
-import {LabeledTextInput} from './components/LabeledTextInput'
-import {useState} from "react";
+import { StatusBar } from 'expo-status-bar';
+import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { LabeledTextInput } from './components/LabeledTextInput'
+import { useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SecureStore from 'expo-secure-store';
 
-function NewPage() {
+
+
+function NewPage({ navigation }) {
     return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Details Screen</Text>
+        <Button
+            title="Log In"
+            onPress={() => {
+            SecureStore.getItemAsync('auth_token')
+                .then((x) => {alert(x)})
+        }}/>
     </View>
   );
 }
 
-function LoginPage() {
+function LoginPage({ navigation }) {
     const [input_email, setEmail] = useState()
     const [input_pass, setPass] = useState()
 
@@ -24,10 +33,11 @@ function LoginPage() {
                     alert("Failed to log in")
                 }
                 if (response.hasOwnProperty('auth_token')) {
-                    alert("Here's your login: " + response.auth_token)
-                    console.log("Logged in!")
+                    SecureStore.setItemAsync('auth_token', response.auth_token)
+                    navigation.navigate('Details').catch((error) => console.error(error))
                 }
             })
+            .catch((error) => console.error(error))
     }
 
   return (
@@ -46,7 +56,7 @@ function LoginPage() {
 const Stack = createNativeStackNavigator();
 function App() {
     return <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Login" component={LoginPage} />
             <Stack.Screen name="Details" component={NewPage} />
         </Stack.Navigator>
@@ -116,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default App;
