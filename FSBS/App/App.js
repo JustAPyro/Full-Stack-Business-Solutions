@@ -2,6 +2,7 @@ import {StatusBar} from 'expo-status-bar';
 import {Alert, Button, StyleSheet, View} from 'react-native';
 import {LabeledTextInput} from './components/LabeledTextInput'
 import {useState} from "react";
+import { NavigationContainer } from '@react-navigation/native';
 
 const App = () => {
     const [input_email, setEmail] = useState()
