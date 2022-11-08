@@ -5,7 +5,8 @@ from routes import (
     hello,
     register_user,
     authorize_user,
-    transaction_post
+    transaction_post,
+    transactions_get
 )
 
 
@@ -43,6 +44,7 @@ def register_urls(api):
     api.add_url_rule('/register', methods=['POST'], view_func=register_user)
     api.add_url_rule('/authorize', methods=['POST'], view_func=authorize_user)
     api.add_url_rule('/transaction', methods=['POST'], view_func=transaction_post)
+    api.add_url_rule('/transactions', methods=['GET'], view_func=transactions_get)
 
 
 app = create_api()

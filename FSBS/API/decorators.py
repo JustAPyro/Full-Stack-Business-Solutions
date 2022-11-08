@@ -3,7 +3,7 @@ from functools import wraps
 
 from flask import request
 
-from FSBS.API.models import User
+from models import User
 from FSBS.API.server_util import construct_error_response
 
 
