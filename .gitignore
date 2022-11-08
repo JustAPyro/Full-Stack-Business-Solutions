@@ -4,6 +4,8 @@ __pycache__/
 secrets.py
 /Scripts/mig.csv
 /FSBS/API/Run_As_Dev.py
+ios/
+credentials.json
 
 node_modules/
 .expo/
