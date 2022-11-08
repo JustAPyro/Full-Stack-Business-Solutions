@@ -20,10 +20,16 @@ function NewTransactionPage({ navigation }) {
             cost: transactionAmount,
             tax: transactionTax
         })
-    };
+            .then((status) => {
+            if (status===200) {
+                alert("Transaction posted successfully!")
+
+            } else
+                alert("Error posting transaction!")
+        })};
 
     return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 325 }}>
         <LabeledTextInput textHeader="Location" callback={setLocation} />
         <LabeledTextInput textHeader="$ Amount" callback={setAmount} />
         <LabeledTextInput textHeader="Tax" callback={setTax} />
@@ -55,8 +61,8 @@ function LoginPage({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <LabeledTextInput textHeader="E-mail:" callback={setEmail}/>
-      <LabeledTextInput textHeader="Password:" callback={setPass}/>
+      <LabeledTextInput textHeader="E-mail:" callback={setEmail} type="username"/>
+      <LabeledTextInput textHeader="Password:" callback={setPass} type="password" secure />
       <Button
           title={"Log In"}
           onPress={loginBtnHandler}
@@ -128,7 +134,7 @@ const api_auth = (props) => {
 };
 
 const api_post_transaction = (props) => {
-    SecureStore.getItemAsync('Authorization').then((auth) => {
+    return SecureStore.getItemAsync('Authorization').then((auth) => {
         return fetch('https://fullstackbusinesssolutions.herokuapp.com/transaction', {
             method: 'POST',
             headers: {
@@ -143,7 +149,7 @@ const api_post_transaction = (props) => {
             })
         })
             .then((response) => {
-                if (response.status === 200) {alert("Transaction posted successfully!")}
+                return response.status
             })
             .catch((error) => {
                 console.error(error);

@@ -16,4 +16,7 @@ export default StyleSheet.create({
         borderRadius: 10
     },
 
+    rowViewStyle: {
+        flexDirection: "row"
+    }
 });
