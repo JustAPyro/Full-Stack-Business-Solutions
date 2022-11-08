@@ -3,7 +3,7 @@ import json
 from extensions import bcrypt
 from flask import request, Response
 from extensions import db
-from models import User, Transaction
+from FSBS.API.models import User, Transaction
 from server_util import construct_error_response
 
 

@@ -15,7 +15,7 @@ def create_api():
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "Default")
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "")
 
     # Register information to run api
     register_extensions(api)
@@ -28,7 +28,7 @@ def create_api():
 
 def register_models(api):
     with api.app_context():
-        from models import (
+        from FSBS.API.models import (
             User,
             Transaction)
         db.create_all()
