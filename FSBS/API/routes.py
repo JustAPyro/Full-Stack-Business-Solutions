@@ -1,6 +1,5 @@
 import json
 
-from FSBS.API.decorators import user_endpoint
 from extensions import bcrypt
 from flask import request, Response
 from extensions import db
