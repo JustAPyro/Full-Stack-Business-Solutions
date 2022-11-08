@@ -168,3 +168,15 @@ class Transaction(db.Model):
             errors.append("TRANSACTION TAX MISSING ERROR")
 
         return errors
+
+    def to_dict(self):
+        return {
+            'user_id': self.user_id,
+            'transaction_id': self.transaction_id,
+            'location': self.location,
+            'cost': self.cost,
+            'tax': self.tax
+        }
+
+    def to_json(self):
+        return json.dumps(self.to_dict())
