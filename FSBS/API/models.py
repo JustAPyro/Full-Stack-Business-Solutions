@@ -3,6 +3,8 @@ import os
 import jwt
 import json
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+
 from extensions import db, bcrypt
 import datetime
 
@@ -25,6 +27,8 @@ class User(db.Model):
     # Activity information
     date_registered = db.Column(db.DateTime, nullable=False)
     date_last_active = db.Column(db.DateTime, nullable=False)
+
+    transactions = relationship("Transaction", back_populates="user")
 
     def __init__(self, email, password, first_name, last_name, phone=None):
         # Record email (Used a username)
@@ -124,7 +128,9 @@ class Transaction(db.Model):
 
     # The transaction_id and the user_id of the owner
     transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
     user_id = db.Column(db.Integer, ForeignKey('users.user_id'), unique=False, nullable=False)
+    user = relationship('User', back_populates='transactions')
 
     # Store the location of the transaction
     location = db.Column(db.String(255), unique=False, nullable=False)
