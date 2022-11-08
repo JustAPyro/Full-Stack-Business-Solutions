@@ -26,54 +26,7 @@ def transactions_get():
     return Response(status=200)
 
 
-def transaction_post():
-    # Start by trying to get the requesting user
-    user = User.get_user(request)
 
-    # If the user couldn't be validated return an error
-    if not user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
-
-    # Now get the json from the request
-    data = request.get_json()
-
-    # If there's no data throw an error
-    if not data:
-        return Response(
-            response=json.dumps({
-                "message": "Please provide user details",
-                "data": None,
-                "error": "Bad request"}),
-            status=400,
-            content_type='JSON')
-
-    # Unpack the rest of the information from the request
-    location = data['location']
-    cost = data['cost']
-    tax = data['tax']
-    print(location)
-    purchase_time = data.get('time', None)
-
-    # Validate data
-    validation_errors = Transaction.validator(location, cost, tax, purchase_time)
-    if len(validation_errors) > 0:
-        return construct_error_response(400, json.dumps(validation_errors))
-
-    # Create a transaction
-    transaction = Transaction(user.user_id,
-                              location=location,
-                              cost=cost,
-                              tax=tax,
-                              purchase_time=purchase_time)
-
-    # Insert the transaction in the database
-    db.session.add(transaction)
-    db.session.commit()
-
-    return Response(
-        response="Success",
-        status=200,
-        content_type='JSON')
 
 
 def authorize_user():
