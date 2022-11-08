@@ -75,11 +75,9 @@ class User(db.Model):
 
         # Get the header from the request
         auth_token = request.headers.get('Authorization')
-        print(auth_token)
         # If we found a token, attempt to get a user from it and return
         if auth_token:
             resp = User.decode_auth_token(auth_token)
-            print(resp)
             if not isinstance(resp[1], str):
                 user = User.query.filter_by(user_id=resp[1]).first()
                 return user

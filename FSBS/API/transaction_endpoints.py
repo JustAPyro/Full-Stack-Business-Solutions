@@ -74,7 +74,6 @@ def transaction_POST():
     location = data['location']
     cost = data['cost']
     tax = data['tax']
-    print(location)
     purchase_time = data.get('time', None)
 
     # Validate data
@@ -97,3 +96,16 @@ def transaction_POST():
         response="Success",
         status=200,
         content_type='JSON')
+
+def transactions_GET():
+    # Start by trying to get the requesting user
+    user = User.get_user(request)
+
+    # If the user couldn't be validated return an error
+    if not user:
+        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
+    print(user.transactions)
+    return Response(status=200)
+
+def transactions_POST():
+    pass # TODO

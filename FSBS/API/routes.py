@@ -15,15 +15,6 @@ def create_user():
     return request.form.get('username')
 
 
-def transactions_get():
-    # Start by trying to get the requesting user
-    user = User.get_user(request)
-
-    # If the user couldn't be validated return an error
-    if not user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
-    print(user.transactions)
-    return Response(status=200)
 
 
 
