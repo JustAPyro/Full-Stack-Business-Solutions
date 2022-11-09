@@ -1,7 +1,7 @@
 import json
 from extensions import db
 from flask import request, Response
-from API.models import User, Transaction
+from models import User, Transaction
 from FSBS.API.server_util import construct_error_response
 
 
