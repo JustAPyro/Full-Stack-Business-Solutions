@@ -29,7 +29,7 @@ def create_api():
 
 def register_models(api):
     with api.app_context():
-        from FSBS.API.models import (
+        from API.models import (
             User,
             Transaction)
         db.create_all()

@@ -4,7 +4,7 @@ from functools import wraps
 from flask import request
 
 from models import User
-from FSBS.API.server_util import construct_error_response
+from server_util import construct_error_response
 
 
 def user_endpoint(f):
