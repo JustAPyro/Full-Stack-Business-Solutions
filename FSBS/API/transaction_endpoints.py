@@ -2,7 +2,7 @@ import json
 from extensions import db
 from flask import request, Response
 from models import User, Transaction
-from FSBS.API.server_util import construct_error_response
+from server_util import construct_error_response
 
 
 def transaction_endpoint():
