@@ -5,7 +5,7 @@ from FSBS.API.extensions import db
 
 from flask import request, Response
 from FSBS.API.models import User, Transaction
-from FSBS.API import errors
+from FSBS.API.responses import errors
 
 
 def transaction_endpoint():

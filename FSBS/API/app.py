@@ -6,7 +6,7 @@ from FSBS.API.routes import (
     register_user,
     authorize_user,
 )
-from FSBS.API.transaction_endpoints import (
+from FSBS.API.endpoints.transaction_endpoints import (
     transaction_endpoint,
     transactions_endpoint)
 
@@ -16,7 +16,8 @@ def create_api():
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL", "postgresql://postgres:defaultpassword@localhost/fsbs_development")
+    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL",
+                                                           "postgresql://postgres:defaultpassword@localhost/fsbs_development")
 
     # Register information to run api
     register_extensions(api)
@@ -45,6 +46,5 @@ def register_urls(api):
     api.add_url_rule('/transactions', methods=['GET', 'POST'], view_func=transactions_endpoint)
 
 
-app = create_api()
-
-
+if __name__ == "__main__":
+    create_api().run()

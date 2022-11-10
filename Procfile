@@ -1,1 +1,1 @@
-web: gunicorn launch:app
+web: gunicorn heroku_launch:api
