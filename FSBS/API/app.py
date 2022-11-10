@@ -45,6 +45,6 @@ def register_urls(api):
     api.add_url_rule('/transactions', methods=['GET', 'POST'], view_func=transactions_endpoint)
 
 
-api = create_api()
+app = create_api()
 
 
