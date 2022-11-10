@@ -1,10 +1,8 @@
 import json
 
-from extensions import bcrypt
+from FSBS.API.extensions import bcrypt, db
 from flask import request, Response
-from extensions import db
-from models import User, Transaction
-from server_util import construct_error_response
+from FSBS.API.models import User, Transaction
 
 
 def hello():

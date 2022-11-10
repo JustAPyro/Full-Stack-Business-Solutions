@@ -1,15 +1,11 @@
 import json
 
-try:
-    from FSBS.API.extensions import db
-    print("Importing from FSBS")
-except ImportError:
-    print("Importing from API")
-    from API.extensions import db
+
+from FSBS.API.extensions import db
 
 from flask import request, Response
-from models import User, Transaction
-import errors
+from FSBS.API.models import User, Transaction
+from FSBS.API import errors
 
 
 def transaction_endpoint():

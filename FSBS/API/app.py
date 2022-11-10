@@ -1,12 +1,12 @@
 import os
 from flask import Flask
-from extensions import db, bcrypt
-from routes import (
+from FSBS.API.extensions import db, bcrypt
+from FSBS.API.routes import (
     hello,
     register_user,
     authorize_user,
 )
-from transaction_endpoints import (
+from FSBS.API.transaction_endpoints import (
     transaction_endpoint,
     transactions_endpoint)
 
