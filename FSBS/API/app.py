@@ -6,7 +6,7 @@ from routes import (
     register_user,
     authorize_user,
 )
-from FSBS.API.transaction_endpoints import (
+from transaction_endpoints import (
     transaction_endpoint,
     transactions_endpoint)
 
