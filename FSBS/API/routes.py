@@ -43,9 +43,11 @@ def authorize_user():
     user = User.query.filter_by(email=email).first()
 
     if user and bcrypt.check_password_hash(user.password, password):
-        print('bcrypt in')
+
+        # get the token
         auth_token = user.encode_auth_token(user.user_id)
-        print('token gen')
+
+
         if auth_token:
             return Response(
                 response=json.dumps({'auth_token': auth_token}),

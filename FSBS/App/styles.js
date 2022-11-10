@@ -18,5 +18,9 @@ export default StyleSheet.create({
 
     rowViewStyle: {
         flexDirection: "row"
+    },
+    confirmBtn: {
+        borderWidth: 2,
+        backgroundColor: '#ddd'
     }
 });

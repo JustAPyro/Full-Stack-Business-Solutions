@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     text:{
         paddingLeft: 20,
-        fontSize: 30
+        fontSize: 16
     },
 
     textInput: {

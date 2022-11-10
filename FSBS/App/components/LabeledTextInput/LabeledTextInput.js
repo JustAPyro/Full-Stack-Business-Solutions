@@ -10,6 +10,7 @@ const LabeledTextInput = (props) => {
              onChangeText={(textVal) => props.callback(textVal)}
              textContentType={props.type}
              secureTextEntry={props.secure}
+             keyboardType={props.keyboardType}
          />
       </View>
   );

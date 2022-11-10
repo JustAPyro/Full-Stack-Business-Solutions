@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import {Alert, Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { LabeledTextInput } from './components/LabeledTextInput'
 import { TextInputGroup } from "./components/TextInputGroup";
 import { useState } from "react";
@@ -15,11 +15,27 @@ function NewTransactionPage({ navigation }) {
     const [transactionTax, setTax] = useState()
 
     const submitBtnHandler = () => {
+
+        const cost = transactionAmount * 100;
+        const tax = transactionTax * 100;
+
+        if (!transactionLocation.trim().length) {
+            alert("Please fill in transaction location.");
+            return;
+        }
+        if (cost - Math.floor(cost) !== 0) {
+            alert("Transaction cost must not have more than two decimal places.")
+            return;
+        }
+        if (tax - Math.floor(tax) !== 0) {
+            alert("Tax must not have more than two decimal places")
+            return;
+        }
+
         api_post_transaction({
             location: transactionLocation,
             cost: transactionAmount,
-            tax: transactionTax
-        })
+            tax: transactionTax})
             .then((status) => {
             if (status===200) {
                 alert("Transaction posted successfully!")
@@ -31,12 +47,13 @@ function NewTransactionPage({ navigation }) {
     return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 325 }}>
         <LabeledTextInput textHeader="Location" callback={setLocation} />
-        <LabeledTextInput textHeader="$ Amount" callback={setAmount} />
-        <LabeledTextInput textHeader="Tax" callback={setTax} />
-        <Button
-            title={"Submit"}
-            onPress={submitBtnHandler}
-        />
+        <LabeledTextInput textHeader="$ Amount" keyboardType={'numeric'} callback={setAmount} />
+        <LabeledTextInput textHeader="Tax" keyboardType={'numeric'} callback={setTax} />
+        <TouchableOpacity style = {styles.confirmBtn} onPress={submitBtnHandler}>
+            <Text >
+               Submit
+           </Text>
+        </TouchableOpacity >
     </View>
   );
 }
@@ -75,7 +92,7 @@ function LoginPage({ navigation }) {
 const Stack = createNativeStackNavigator();
 function App() {
     return <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="NewTransaction">
             <Stack.Screen name="Login" component={LoginPage} />
             <Stack.Screen name="NewTransaction" component={NewTransactionPage} />
         </Stack.Navigator>
@@ -158,13 +175,21 @@ const api_post_transaction = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 200
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 200
+    },
+    confirmBtn: {
+        marginTop: 20,
+        paddingHorizontal: 50,
+        paddingVertical: 10,
+        borderWidth: 3,
+        backgroundColor: '#fff',
+        borderRadius: 12,
+    }
 });
 
 export default App;
