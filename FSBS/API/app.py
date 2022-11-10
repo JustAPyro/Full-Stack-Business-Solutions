@@ -45,7 +45,7 @@ def register_urls(api):
     api.add_url_rule('/register', methods=['POST'], view_func=register_user)
     api.add_url_rule('/authorize', methods=['POST'], view_func=authorize_user)
     api.add_url_rule('/transaction', methods=['GET', 'POST'], view_func=transaction_endpoint)
-    api.add_url_rule('/transactions', methods=['GET'], view_func=transactions_endpoint)
+    api.add_url_rule('/transactions', methods=['GET', 'POST'], view_func=transactions_endpoint)
 
 
 app = create_api()

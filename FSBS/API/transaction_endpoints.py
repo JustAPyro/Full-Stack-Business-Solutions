@@ -21,11 +21,11 @@ def transactions_endpoint():
 
 def transaction_GET():
     # Start by trying to get the requesting user
-    user = User.get_user(request)
+    success, user, error_response = User.get_user(request)
 
     # If the user couldn't be validated return an error
-    if not user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
+    if not success:
+        return error_response
 
     # Try checking for a transaction_id
     tid = request.args.to_dict().get('transactionid')
@@ -51,11 +51,11 @@ def transaction_GET():
 
 def transaction_POST():
     # Start by trying to get the requesting user
-    user = User.get_user(request)
+    success, user, error_response = User.get_user(request)
 
     # If the user couldn't be validated return an error
-    if not user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
+    if not success:
+        return error_response
 
     # Now get the json from the request
     data = request.get_json()
@@ -97,15 +97,80 @@ def transaction_POST():
         status=200,
         content_type='JSON')
 
+
 def transactions_GET():
     # Start by trying to get the requesting user
-    user = User.get_user(request)
+    success, user, error_response = User.get_user(request)
 
     # If the user couldn't be validated return an error
-    if not user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Could not find user'}))
-    print(user.transactions)
-    return Response(status=200)
+    if not success:
+        return error_response
+
+    # Get the list of transactions
+    transactions = user.transactions
+
+    # create a list of transaction dicts
+    transaction_map = list()
+    for t in transactions:
+        transaction_map.append(t.to_dict())
+
+    # Convert the list into json
+    transaction_json = json.dumps(transaction_map)
+
+    # Return the list
+    return Response(
+        response=transaction_json,
+        status=200,
+        content_type='JSON')
+
 
 def transactions_POST():
-    pass # TODO
+    # Start by trying to get the requesting user
+    success, user, error_response = User.get_user(request)
+
+    # If the user couldn't be validated return an error
+    if not success:
+        return error_response
+
+    # Now get the json from the request
+    data = request.get_json()
+
+    # If there's no data throw an error
+    if not data:
+        return Response(
+            response=json.dumps({
+                "message": "Please provide user details",
+                "data": None,
+                "error": "Bad request"}),
+            status=400,
+            content_type='JSON')
+
+    # Unpack the rest of the information from the request
+    for t in data:
+        location = t['location']
+        cost = t['cost']
+        tax = t['tax']
+        purchase_time = t.get('time', None)
+
+        # Validate data
+        validation_errors = Transaction.validator(location, cost, tax, purchase_time)
+        if len(validation_errors) > 0:
+            return construct_error_response(400, json.dumps(validation_errors))
+
+        # Create a transaction
+        transaction = Transaction(user.user_id,
+                                  location=location,
+                                  cost=cost,
+                                  tax=tax,
+                                  purchase_time=purchase_time)
+
+        # Insert the transaction in the database
+        db.session.add(transaction)
+
+    # Commit all the added transactions
+    db.session.commit()
+
+    return Response(
+        response="Success",
+        status=200,
+        content_type='JSON')
