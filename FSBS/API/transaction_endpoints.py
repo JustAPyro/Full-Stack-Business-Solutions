@@ -1,6 +1,12 @@
 import json
 
-from extensions import db
+try:
+    from FSBS.API.extensions import db
+    print("Importing from FSBS")
+except ImportError:
+    print("Importing from API")
+    from API.extensions import db
+
 from flask import request, Response
 from models import User, Transaction
 import errors

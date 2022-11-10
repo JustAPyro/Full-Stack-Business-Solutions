@@ -23,6 +23,14 @@ function NewTransactionPage({ navigation }) {
             alert("Please fill in transaction location.");
             return;
         }
+        if (!transactionAmount.trim().length) {
+            alert("Please fill in the cost.");
+            return;
+        }
+        if (!transactionTax.trim().length) {
+            alert("Please fill in the tax.");
+            return;
+        }
         if (cost - Math.floor(cost) !== 0) {
             alert("Transaction cost must not have more than two decimal places.")
             return;
