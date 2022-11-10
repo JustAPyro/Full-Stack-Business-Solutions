@@ -7,7 +7,7 @@ from flask import request, Response
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from FSBS.API import errors
+import errors
 from extensions import db, bcrypt
 import datetime
 
