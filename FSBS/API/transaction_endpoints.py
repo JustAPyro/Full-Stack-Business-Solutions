@@ -1,9 +1,9 @@
 import json
+
 from extensions import db
 from flask import request, Response
 from models import User, Transaction
-from responses import errors
-from server_util import construct_error_response
+from FSBS.API import errors
 
 
 def transaction_endpoint():
@@ -63,24 +63,17 @@ def transaction_POST():
 
     # If there's no data throw an error
     if not data:
-        return Response(
-            response=json.dumps({
-                "message": "Please provide user details",
-                "data": None,
-                "error": "Bad request"}),
-            status=400,
-            content_type='JSON')
+        return errors.MISSING_BODY(request.json)
 
     # Unpack the rest of the information from the request
-    location = data['location']
-    cost = data['cost']
-    tax = data['tax']
+    location = data.get('location')
+    cost = data.get('cost')
+    tax = data.get('tax')
     purchase_time = data.get('time', None)
 
-    # Validate data
-    validation_errors = Transaction.validator(location, cost, tax, purchase_time)
-    if len(validation_errors) > 0:
-        return construct_error_response(400, json.dumps(validation_errors))
+    # Validate data and if it is invalid return a malformed body error
+    valid, issues = Transaction.validator(location, cost, tax, purchase_time)
+    if not valid: return errors.MALFORMED_BODY(issues, {}, request=request)
 
     # Create a transaction
     transaction = Transaction(user.user_id,
@@ -149,7 +142,7 @@ def transactions_POST():
 
         # Validate data and if it is invalid return a malformed body error
         valid, issues = Transaction.validator(location, cost, tax, purchase_time)
-        return errors.MALFORMED_BODY(issues=issues, data=request.json) if valid else none
+        if not valid: return errors.MALFORMED_BODY(issues=issues, data={})
 
         # Create a transaction
         transaction = Transaction(user.user_id,

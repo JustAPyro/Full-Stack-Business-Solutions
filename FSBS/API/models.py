@@ -1,14 +1,13 @@
 import os
-from typing import Optional
+from typing import Optional, Any
 
 import jwt
 import json
 from flask import request, Response
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.testing.pickleable import User
 
-from responses import errors
+from FSBS.API import errors
 from extensions import db, bcrypt
 import datetime
 
@@ -75,7 +74,7 @@ class User(db.Model):
         })
 
     @staticmethod
-    def get_user(http_request: request) -> tuple[bool, Optional[User], Optional[Response]]:
+    def get_user(http_request: request) -> tuple[bool, Any, Optional[Response]]:
 
         # Get the header from the request
         auth_token = http_request.headers.get('Authorization')

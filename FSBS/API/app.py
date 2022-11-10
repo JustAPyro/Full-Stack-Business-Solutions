@@ -6,7 +6,7 @@ from routes import (
     register_user,
     authorize_user,
 )
-from transaction_endpoints import (
+from FSBS.API.transaction_endpoints import (
     transaction_endpoint,
     transactions_endpoint)
 
@@ -29,9 +29,6 @@ def create_api():
 
 def register_models(api):
     with api.app_context():
-        from models import (
-            User,
-            Transaction)
         db.create_all()
 
 
@@ -48,6 +45,6 @@ def register_urls(api):
     api.add_url_rule('/transactions', methods=['GET', 'POST'], view_func=transactions_endpoint)
 
 
-app = create_api()
+api = create_api()
 
 

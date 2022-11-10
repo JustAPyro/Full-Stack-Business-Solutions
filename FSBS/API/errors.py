@@ -1,10 +1,10 @@
 import json
 from enum import Enum
-
 from flask import Response
+from flask import request as http_request
 
 
-class Code(Enum):
+class Code(int, Enum):
     EXPIRED_AUTH = 100,
     INVALID_AUTH = 101,
     MISSING_AUTH = 102,
@@ -15,13 +15,32 @@ class Code(Enum):
     USER_NOT_AUTHORIZED = 107
 
 
-def error_response(message: str, data: dict, code: Code, status: int, content_type: str):
+def map_request(r: http_request):
+    return {
+        'access_route': r.access_route,
+        'endpoint': r.endpoint,
+        'base_url': r.base_url,
+        'args': r.args,
+        'method': r.method,
+        'user_agent': str(r.user_agent)
+    }
+
+
+def error_response(message: str, data: dict, code: Code, status: int, content_type: str, request=None):
+    # Log the error
+    from app import api
+    api.logger.error(f'- [{code}] - {message}')
+
+    # If a request was included, insert it into data
+    if request: data['request'] = map_request(request)
+
+    # Compose and return the response
     return Response(
         response=json.dumps({
             'status': 'error',
             'message': message,
             'code': code,
-            'data': json.dumps(data)}),
+            'data': data}),
         status=status,
         content_type=content_type
     )
@@ -98,12 +117,13 @@ def MISSING_BODY(data: dict) -> Response:
         content_type='JSON')
 
 
-def MALFORMED_BODY(issues: dict, data: dict) -> Response:
+def MALFORMED_BODY(issues: dict, data: dict, request: http_request) -> Response:
     data['issues'] = issues
 
     return error_response(
-        message='JSON body was malformed and failed validation. Refer to data issues for missing features.',
+        message='JSON body was malformed and failed validation. Refer to data.issues for missing features.',
         data=data,
         code=Code.MALFORMED_BODY,
         status=400,
-        content_type='JSON')
+        content_type='JSON',
+        request=request)
