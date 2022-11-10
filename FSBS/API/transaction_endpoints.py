@@ -2,6 +2,7 @@ import json
 from extensions import db
 from flask import request, Response
 from models import User, Transaction
+from responses import errors
 from server_util import construct_error_response
 
 
@@ -32,14 +33,14 @@ def transaction_GET():
 
     # If there's no transaction id then throw an error response
     if not tid:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Please include transaction id parameters'}))
+        return errors.MISSING_PARAMS(params='transactionid', data=request.json)
 
     # Now find the transaction
     transaction = Transaction.query.filter_by(transaction_id=tid).first()
 
     # If the transaction doesn't belong to this user throw another error
     if user != transaction.user:
-        return construct_error_response(400, json.dumps({'ERRORS': 'Not authorized to view this transaction.'}))
+        return errors.USER_NOT_AUTHORIZED('Transaction', request.json)
 
     # Otherwise return the transaction
     return Response(
@@ -137,13 +138,7 @@ def transactions_POST():
 
     # If there's no data throw an error
     if not data:
-        return Response(
-            response=json.dumps({
-                "message": "Please provide user details",
-                "data": None,
-                "error": "Bad request"}),
-            status=400,
-            content_type='JSON')
+        return errors.MISSING_BODY(data=request.json)
 
     # Unpack the rest of the information from the request
     for t in data:
@@ -152,10 +147,9 @@ def transactions_POST():
         tax = t['tax']
         purchase_time = t.get('time', None)
 
-        # Validate data
-        validation_errors = Transaction.validator(location, cost, tax, purchase_time)
-        if len(validation_errors) > 0:
-            return construct_error_response(400, json.dumps(validation_errors))
+        # Validate data and if it is invalid return a malformed body error
+        valid, issues = Transaction.validator(location, cost, tax, purchase_time)
+        return errors.MALFORMED_BODY(issues=issues, data=request.json) if valid else none
 
         # Create a transaction
         transaction = Transaction(user.user_id,

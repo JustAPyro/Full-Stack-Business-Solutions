@@ -170,17 +170,25 @@ class Transaction(db.Model):
 
     @staticmethod
     def validator(location, cost, tax, purchase_time):
-        # Map to store the errors in
-        errors = []
+
+        # flag for valid
+        valid = True
+
+        # Map to store the issues in
+        validation_errors = dict()
+        validation_errors['missing'] = list()
 
         if not location:
-            errors.append("TRANSACTION LOCATION MISSING ERROR")
+            valid = False
+            validation_errors['missing'].append('location')
         if not cost:
-            errors.append("TRANSACTION COST MISSING ERROR")
+            valid = False
+            validation_errors['missing'].append('cost')
         if not tax:
-            errors.append("TRANSACTION TAX MISSING ERROR")
+            valid = False
+            validation_errors['missing'].append('tax')
 
-        return errors
+        return valid, validation_errors
 
     def to_dict(self):
         return {
