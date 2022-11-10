@@ -3,7 +3,7 @@ import json
 from extensions import db
 from flask import request, Response
 from models import User, Transaction
-from FSBS.API import errors
+import errors
 
 
 def transaction_endpoint():
