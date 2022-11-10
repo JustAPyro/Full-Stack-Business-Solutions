@@ -1,10 +1,14 @@
 import os
+from typing import Optional
 
 import jwt
 import json
+from flask import request, Response
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.testing.pickleable import User
 
+from responses import errors
 from extensions import db, bcrypt
 import datetime
 
@@ -71,18 +75,29 @@ class User(db.Model):
         })
 
     @staticmethod
-    def get_user(request):
+    def get_user(http_request: request) -> tuple[bool, Optional[User], Optional[Response]]:
 
         # Get the header from the request
-        auth_token = request.headers.get('Authorization')
-        # If we found a token, attempt to get a user from it and return
-        if auth_token:
-            resp = User.decode_auth_token(auth_token)
-            if not isinstance(resp[1], str):
-                user = User.query.filter_by(user_id=resp[1]).first()
-                return user
+        auth_token = http_request.headers.get('Authorization')
 
-        return None
+        if not auth_token:
+            return False, None, errors.MISSING_AUTH(request.json)
+
+        # If we found a token, attempt to decode it
+        token = User.decode_auth_token(auth_token)
+
+        if token == 'EXPIRED':  # If token timed out / expired return error
+            return False, None, errors.EXPIRED_AUTH(request.json)
+
+        if token == 'INVALID':  # If token was invalid pass up the appropriate error
+            return False, None, errors.INVALID_AUTH(request.json)
+
+        user = User.query.filter_by(user_id=token).first()
+
+        if not user:  # If user wasn't found return an appropriate error
+            return False, None, errors.USER_NOT_FOUND(user_id=token, data=request.json)
+
+        return True, user, None
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -114,11 +129,11 @@ class User(db.Model):
         """
         try:
             payload = jwt.decode(auth_token, os.environ.get("AUTH_KEY_SECRET", "default_val"), algorithms='HS256')
-            return True, payload['sub'], 'Success'
+            return payload['sub']
         except jwt.ExpiredSignatureError:
-            return False, None, 'Signature expired. Please log in again.'
+            return 'EXPIRED'
         except jwt.InvalidTokenError:
-            return False, None, 'Invalid token. Please log in again.'
+            return 'INVALID'
 
 
 class Transaction(db.Model):
