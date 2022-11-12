@@ -10,6 +10,8 @@ from sqlalchemy.orm import relationship
 from FSBS.API.extensions import db, bcrypt
 import datetime
 
+from FSBS.API.responses import errors
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -52,14 +54,24 @@ class User(db.Model):
         self.date_last_active = datetime.datetime.now()
 
     @staticmethod
-    def validator(email, password, first_name, last_name, phone=None):
-        # Map to store the errors in
-        errors = []
+    def validator(email, password, first_name, last_name, phone=None, data=None):
 
-        if db.session.query(db.exists().where(User.email == email)).scalar():
-            errors.append({'EMAIL_EXISTS_ERROR': email})
+        # flag for valid
+        valid = True
 
-        return errors
+        # Map to store the issues in
+        validation_errors = dict()
+        validation_errors['missing'] = list()
+
+        # Check to make sure all the required features exist
+        for feature in ['email', 'password', 'first_name', 'last_name']:
+            if not data[feature]: validation_errors['missing'].append(feature); valid = False
+
+        # If the email already exists
+        if db.session.query(db.exists().where(User.email == data['email'])).scalar():
+            validation_errors['exists'] = ['email']; valid = False
+
+        return valid, validation_errors
 
     def to_json(self):
         return json.dumps({

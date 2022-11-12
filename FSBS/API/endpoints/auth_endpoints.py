@@ -1,6 +1,10 @@
 import json
-
 from flask import request, Response
+
+from FSBS.API.extensions import db, bcrypt
+from FSBS.API.models import User, Transaction
+from FSBS.API.responses import errors
+from FSBS.API.database import validation
 
 
 def authorize_user():
@@ -8,13 +12,7 @@ def authorize_user():
     data = request.get_json()
 
     if not data:
-        return Response(
-            response=json.dumps({
-                "message": "Please provide user details",
-                "data": None,
-                "error": "Bad request"}),
-            status=400,
-            content_type='JSON')
+        return errors.MISSING_BODY()
 
     email = data['email']
     password = data['password']
@@ -30,7 +28,6 @@ def authorize_user():
         # get the token
         auth_token = user.encode_auth_token(user.user_id)
 
-
         if auth_token:
             return Response(
                 response=json.dumps({'auth_token': auth_token}),
@@ -45,4 +42,34 @@ def authorize_user():
     return Response(  # TODO: Add a better response here
         response=json.dumps({'ERROR': "User could not be found."}),
         status=401,
+        content_type='JSON')
+
+
+def register_user():
+    # Collect
+    data = request.get_json()
+
+    if not data:
+        return errors.MISSING_BODY(data={})
+
+    email = data['email']
+    password = data['password']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    phone = data['phone']
+
+    valid, issues = User.validator(email, password, first_name, last_name, phone, data=data)
+    if not valid: return errors.MALFORMED_BODY(issues=issues, data={}, request=request)
+
+    # Create new user
+    user = User(email, password, first_name, last_name, phone)
+
+    # Push to database
+    db.session.add(user)
+    db.session.commit()
+
+    # Return the json representation of the user and 200 OKAY status code
+    return Response(
+        response=user.to_json(),
+        status=200,
         content_type='JSON')
