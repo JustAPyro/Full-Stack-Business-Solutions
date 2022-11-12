@@ -11,8 +11,9 @@ from FSBS.API.responses import errors
 def transaction_endpoint():
     method_endpoints = {
         'GET': transaction_GET,
-        'POST': transaction_POST}
+        'POST': transaction_POST }
     return method_endpoints[request.method]()
+
 
 
 def transactions_endpoint():
@@ -114,6 +115,7 @@ def transactions_GET():
     transaction_json = json.dumps(transaction_map)
 
     # Return the list
+    print(transaction_json)
     return Response(
         response=transaction_json,
         status=200,
