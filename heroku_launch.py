@@ -1,2 +1,2 @@
-from FSBS.API.app import create_api
+from FSBS.API.api import create_api
 api = create_api()
