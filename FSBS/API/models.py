@@ -7,6 +7,7 @@ from flask import request, Response
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
+
 from FSBS.API.extensions import db, bcrypt
 import datetime
 
@@ -69,7 +70,8 @@ class User(db.Model):
 
         # If the email already exists
         if db.session.query(db.exists().where(User.email == data['email'])).scalar():
-            validation_errors['exists'] = ['email']; valid = False
+            validation_errors['exists'] = ['email'];
+            valid = False
 
         return valid, validation_errors
 
@@ -100,7 +102,7 @@ class User(db.Model):
             return False, None, errors.EXPIRED_AUTH(request.json)
 
         if token == 'INVALID':  # If token was invalid pass up the appropriate error
-            return False, None, errors.INVALID_AUTH(request.json)
+            return False, None, errors.INVALID_AUTH()
 
         user = User.query.filter_by(user_id=token).first()
 

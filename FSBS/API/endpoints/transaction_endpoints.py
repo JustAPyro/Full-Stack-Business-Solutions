@@ -1,6 +1,6 @@
 import json
 
-
+from FSBS.API.decorators import user_endpoint
 from FSBS.API.extensions import db
 
 from flask import request, Response
@@ -23,13 +23,9 @@ def transactions_endpoint():
     return method_endpoints[request.method]()
 
 
-def transaction_GET():
-    # Start by trying to get the requesting user
-    success, user, error_response = User.get_user(request)
+@user_endpoint
+def transaction_GET(user):
 
-    # If the user couldn't be validated return an error
-    if not success:
-        return error_response
 
     # Try checking for a transaction_id
     tid = request.args.to_dict().get('transactionid')

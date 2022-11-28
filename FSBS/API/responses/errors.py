@@ -27,9 +27,6 @@ def map_request(r: http_request):
 
 
 def error_response(message: str, data: dict, code: Code, status: int, content_type: str, request=None):
-    # Log the error
-    from app import app
-    app.logger.error(f'- [{code}] - {message}')
 
     # If a request was included, insert it into data
     if request: data['request'] = map_request(request)
@@ -64,7 +61,7 @@ def EXPIRED_AUTH(data: dict) -> Response:
         content_type='JSON')
 
 
-def INVALID_AUTH(data: dict) -> Response:
+def INVALID_AUTH(data: dict=dict()) -> Response:
     return error_response(
         message='Authorization token was invalid. Please provide a valid authorization token by logging in.',
         data=data,

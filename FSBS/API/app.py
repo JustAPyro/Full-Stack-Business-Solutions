@@ -4,14 +4,12 @@ from FSBS.API.routes import register_urls
 from FSBS.API.extensions import db, bcrypt
 
 
-
 def create_api():
     # Create API app
     api = Flask(__name__)
 
     # Configure... the configs
-    api.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL",
-                                                           "postgresql://postgres:defaultpassword@localhost/fsbs_development")
+    api.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgreSQLpassword@localhost/fsbs_development"
 
     # Register information to run api
     register_extensions(api)
@@ -30,8 +28,6 @@ def register_models(api):
 def register_extensions(api):
     db.init_app(api)
     bcrypt.init_app(api)
-
-
 
 
 if __name__ == "__main__":
