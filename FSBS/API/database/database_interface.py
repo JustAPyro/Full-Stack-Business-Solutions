@@ -1,14 +1,13 @@
 from sqlalchemy.orm import Session
 from FSBS.API.structures import schemas, models
+from FSBS.API.utility.auth import get_password_hash, verify_password
 import datetime
-
-from FSBS.API.dependencies import bcrypt, oauth2_scheme
 
 
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         email=user.email,
-        password=bcrypt.generate_password_hash(user.password, 4).decode('UTF-8'),  # TODO: Hook this up to config
+        password=get_password_hash(user.password),  # TODO: Hook this up to config
         first_name=user.first_name,
         last_name=user.last_name,
         phone=user.phone,
@@ -21,12 +20,25 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-def get_user(db: Session, user_id: int):
+def authenticate_user(db: Session, username: str, password: str):
+    # Get the user based on username (email)
+    user = get_user_by_email(db, username)
+    if not user:
+        return False
+    if not verify_password(password, user.password):
+        return False
+    return user
+
+
+def get_user_by_id(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.user_id == user_id).first()
 
 
-def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int):
+def get_user_by_email(db: Session, user_email: str):
+    return db.query(models.User).filter(models.User.email == user_email).first()
 
+
+def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int):
     # *if* time wasn't included, set it to now
     if purchase.purchase_time is None:
         purchase.purchase_time = datetime.datetime.now()
@@ -39,4 +51,3 @@ def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int)
     db.commit()
     db.refresh(db_purchase)
     return db_purchase
-
