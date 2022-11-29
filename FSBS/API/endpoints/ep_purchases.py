@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from FSBS.API.structures import schemas
 from FSBS.API.database import database_interface as dbi
 from FSBS.API.dependencies import get_db, get_current_user
-
+from FSBS.API.structures.schemas import User
 
 router = APIRouter(
     prefix='/api/purchases',
@@ -15,8 +15,10 @@ router = APIRouter(
 @router.get(
     path='/{purchase_id}/',
     summary='Get single purchase')
-def undef2():
-    raise NotImplementedError()
+def get_purchase_single(purchase_id: int,
+                        db: Session = Depends(get_db),
+                        user: User = Depends(get_current_user)):
+    return dbi.get_purchase_by_id_with_user(db, purchase_id=purchase_id, user_id=user.user_id)
 
 
 @router.get(
@@ -31,7 +33,7 @@ def undef1():
     summary='Post new purchase')
 def post_purchase_single(purchase: schemas.PurchaseCreate,
                          db: Session = Depends(get_db),
-                         user=Depends(get_current_user)):
+                         user: User = Depends(get_current_user)):
     return dbi.create_purchase(db=db, purchase=purchase, user_id=user.user_id)
 
 

@@ -51,3 +51,10 @@ def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int)
     db.commit()
     db.refresh(db_purchase)
     return db_purchase
+
+
+def get_purchase_by_id_with_user(db: Session, purchase_id: int, user_id: int):
+    return (db.query(models.Purchase)
+            .filter(models.Purchase.purchase_id == purchase_id)
+            .filter(models.Purchase.user_id == user_id)
+            .first())
