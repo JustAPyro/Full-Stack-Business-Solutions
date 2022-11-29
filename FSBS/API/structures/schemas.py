@@ -3,6 +3,25 @@ from pydantic import BaseModel
 import datetime
 
 
+class PurchaseBase(BaseModel):
+    location: str
+    cost: int
+    tax: int
+    purchase_time: Optional[datetime.datetime]
+
+
+class PurchaseCreate(PurchaseBase):
+    pass
+
+
+class Purchase(PurchaseBase):
+    user_id: int
+    purchase_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class UserBase(BaseModel):
     email: str
     first_name: str
@@ -16,6 +35,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     user_id: int
+    purchases: list[Purchase] = []
     date_registered: datetime.datetime
     date_last_active: datetime.datetime
 
@@ -23,17 +43,3 @@ class User(UserBase):
         orm_mode = True
 
 
-class PurchaseBase(BaseModel):
-    user_id: int
-    location: str
-    cost: int
-    tax: int
-    purchase_time: Optional[datetime.datetime]
-
-
-class PurchaseCreate(PurchaseBase):
-    pass
-
-
-class Purchase(PurchaseBase):
-    purchase_id: int

@@ -28,7 +28,7 @@ class User(Base):
     date_registered = Column(DateTime, nullable=False)
     date_last_active = Column(DateTime, nullable=False)
 
-    transactions = relationship("Transaction", back_populates="user")
+    purchases = relationship("Purchase", back_populates="user")
 
     def to_json(self):
         return json.dumps({
@@ -112,7 +112,8 @@ class Purchase(Base):
     purchase_id = Column(Integer, primary_key=True, autoincrement=True)
 
     user_id = Column(Integer, ForeignKey('users.user_id'), unique=False, nullable=False)
-    user = relationship('User', back_populates='transactions')
+    user = relationship('User', back_populates='purchases')
+
 
     # Store the location of the transaction
     location = Column(String(255), unique=False, nullable=False)
@@ -124,6 +125,7 @@ class Purchase(Base):
     # Save the time of the purchase
     purchase_time = Column(DateTime, nullable=False)
 
+    '''
     def __init__(self, user_id, location, cost, tax, purchase_time=None):
         self.user_id = user_id
         self.location = location
@@ -136,6 +138,7 @@ class Purchase(Base):
             self.purchase_time = datetime.datetime(year=int(y), month=int(m), day=int(d))
         else:
             self.purchase_time = datetime.datetime.now()
+            '''
 
     @staticmethod
     def validator(location, cost, tax, purchase_time):
