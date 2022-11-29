@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from FSBS.API.structures import schemas, models
 import datetime
 
-from FSBS.API.dependencies import bcrypt
+from FSBS.API.dependencies import bcrypt, oauth2_scheme
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -26,12 +26,13 @@ def get_user(db: Session, user_id: int):
 
 
 def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int):
+
     # *if* time wasn't included, set it to now
     if purchase.purchase_time is None:
         purchase.purchase_time = datetime.datetime.now()
 
     # Create a db purchase model by unpacking the passed purchase item
-    db_purchase = models.Purchase(**purchase.dict())
+    db_purchase = models.Purchase(**purchase.dict(), user_id=user_id)
 
     # Commit to db and return it
     db.add(db_purchase)

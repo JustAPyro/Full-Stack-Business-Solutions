@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from FSBS.API.structures import schemas
 from FSBS.API.database import database_interface as dbi
-from FSBS.API.dependencies import get_db
+from FSBS.API.dependencies import get_db, oauth2_scheme
 
 # Create an endpoint router
 from fastapi import APIRouter, Depends
@@ -30,8 +30,8 @@ def undef1():
 @router.post(
     path='/',
     summary='Post new purchase')
-def post_users(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    raise NotImplementedError()
+def post_purchase_single(purchase: schemas.PurchaseCreate, db: Session = Depends(get_db)):
+    return dbi.create_purchase(db=db, purchase=purchase, user_id=1)
 
 
 @router.post(
