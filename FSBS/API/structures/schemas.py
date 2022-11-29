@@ -31,6 +31,10 @@ class Purchase(PurchaseBase):
         orm_mode = True
 
 
+class PurchaseBatch(BaseModel):
+    purchases: list[Purchase]
+
+
 class UserBase(BaseModel):
     email: str
     first_name: str

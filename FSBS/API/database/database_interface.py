@@ -38,7 +38,7 @@ def get_user_by_email(db: Session, user_email: str):
     return db.query(models.User).filter(models.User.email == user_email).first()
 
 
-def create_purchase(db: Session, purchase: schemas.PurchaseCreate, user_id: int):
+def create_purchases(db: Session, purchase: schemas.PurchaseCreate, user_id: int):
     # *if* time wasn't included, set it to now
     if purchase.purchase_time is None:
         purchase.purchase_time = datetime.datetime.now()
@@ -58,3 +58,20 @@ def get_purchase_by_id_with_user(db: Session, purchase_id: int, user_id: int):
             .filter(models.Purchase.purchase_id == purchase_id)
             .filter(models.Purchase.user_id == user_id)
             .first())
+
+
+def delete_purchase_by_id_with_user(db: Session, purchase_id: int, user_id: int) -> bool:
+    # First search db for a purchase with this id and user id
+    purchase = (db.query(models.Purchase)
+                .filter(models.Purchase.purchase_id == purchase_id)
+                .filter(models.Purchase.user_id == user_id)
+                .first())
+
+    # If we didn't find this purchase return false
+    if not purchase:
+        return False
+
+    # Otherwise delete it and return true
+    db.delete(purchase)
+    db.commit()
+    return True
