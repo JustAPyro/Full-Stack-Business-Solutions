@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 import datetime
 
@@ -15,11 +16,24 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     user_id: int
-    first_name: str
-    last_name: str
-    phone: str
     date_registered: datetime.datetime
     date_last_active: datetime.datetime
 
     class Config:
         orm_mode = True
+
+
+class PurchaseBase(BaseModel):
+    user_id: int
+    location: str
+    cost: int
+    tax: int
+    purchase_time: Optional[datetime.datetime]
+
+
+class PurchaseCreate(PurchaseBase):
+    pass
+
+
+class Purchase(PurchaseBase):
+    purchase_id: int

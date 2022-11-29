@@ -1,10 +1,7 @@
 import json
 from flask import request, Response
-
-from FSBS.API.extensions import db, bcrypt
-from FSBS.API.database.models import User, Transaction
+from FSBS.API.structures.models import User
 from FSBS.API.responses import errors
-from FSBS.API.database import validation
 
 
 def authorize_user():

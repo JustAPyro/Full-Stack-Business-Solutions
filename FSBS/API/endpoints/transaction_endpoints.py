@@ -1,10 +1,9 @@
 import json
 
 from FSBS.API.decorators import user_endpoint
-from FSBS.API.extensions import db
 
 from flask import request, Response
-from FSBS.API.database.models import User, Transaction
+from FSBS.API.structures.models import User, Transaction
 from FSBS.API.responses import errors
 
 

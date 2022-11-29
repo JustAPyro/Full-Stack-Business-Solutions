@@ -1,6 +1,6 @@
 from flask import request
 
-from FSBS.API.database.models import User
+from FSBS.API.structures.models import User
 
 
 def user_endpoint(func):

@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
-from FSBS.API import schemas
-#from FSBS.API.api import get_db
+from FSBS.API.structures import schemas
 from FSBS.API.database import database_interface as dbi
 from FSBS.API.dependencies import get_db
 
@@ -22,6 +21,11 @@ def post_users(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = dbi.get_user(db, user_id=user_id)
     return db_user
+
+@router.delete('/{user_id}/', response_model=schemas.User)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    dbi.delete_user(db, user_id=user_id)
+    return 'lol'
 
 
 

@@ -7,7 +7,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
 from FSBS.API.database.database import Base
-from FSBS.API.extensions import bcrypt
 
 
 class User(Base):
@@ -30,8 +29,6 @@ class User(Base):
     date_last_active = Column(DateTime, nullable=False)
 
     transactions = relationship("Transaction", back_populates="user")
-
-
 
     def to_json(self):
         return json.dumps({
@@ -70,6 +67,7 @@ class User(Base):
 
         return True, user, None
     '''
+
     @staticmethod
     def encode_auth_token(user_id):
         """
@@ -107,14 +105,11 @@ class User(Base):
             return 'INVALID'
 
 
-
-
-
-class Transaction(Base):
-    __tablename__ = 'transactions'
+class Purchase(Base):
+    __tablename__ = 'purchases'
 
     # The transaction_id and the user_id of the owner
-    transaction_id = Column(Integer, primary_key=True, autoincrement=True)
+    purchase_id = Column(Integer, primary_key=True, autoincrement=True)
 
     user_id = Column(Integer, ForeignKey('users.user_id'), unique=False, nullable=False)
     user = relationship('User', back_populates='transactions')
