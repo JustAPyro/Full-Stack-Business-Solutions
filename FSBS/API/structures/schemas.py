@@ -3,6 +3,15 @@ from pydantic import BaseModel
 import datetime
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
 class PurchaseBase(BaseModel):
     location: str
     cost: int
@@ -41,5 +50,3 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
-
-
