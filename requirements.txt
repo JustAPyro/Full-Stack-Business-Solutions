@@ -26,3 +26,5 @@ urllib3==1.26.12
 Werkzeug==2.2.2
 
 fastapi~=0.88.0
+passlib~=1.7.4
+pydantic~=1.10.2

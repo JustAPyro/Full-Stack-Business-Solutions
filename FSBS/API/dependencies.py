@@ -1,18 +1,17 @@
-import sqlalchemy
 from fastapi import Depends
-from fastapi import HTTPException, status
-
-from FSBS.API.database.database import SessionLocal
-from fastapi.security import OAuth2PasswordBearer
-from FSBS.API.utility.auth import SECRET_KEY, ALGORITHM
-from FSBS.API.structures.schemas import TokenData
-from FSBS.API.database.database_interface import get_user_by_email
 from jose import jwt, JWTError
 from flask_bcrypt import Bcrypt
+from fastapi import HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from structures.schemas import TokenData
+from database.database import SessionLocal
+from utility.auth import SECRET_KEY, ALGORITHM
+from database.database_interface import get_user_by_email
 
 # Establish Bcrypt extension for hashing passwords
 bcrypt = Bcrypt()
 
+# Oauth2 definition scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 

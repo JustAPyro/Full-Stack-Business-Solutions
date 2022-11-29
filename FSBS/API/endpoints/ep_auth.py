@@ -1,13 +1,11 @@
-# Create an endpoint router
 from datetime import timedelta
-
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from FSBS.API.database import database_interface as dbi
+from fastapi import APIRouter, Depends, HTTPException, status
 from FSBS.API.dependencies import get_db
-from FSBS.API.structures.schemas import UserCreate, Token
+from FSBS.API.structures.schemas import Token
 from FSBS.API.utility.auth import create_access_token
+from FSBS.API.database import database_interface as dbi
 from FSBS.API.utility.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter(

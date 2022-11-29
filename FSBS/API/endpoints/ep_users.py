@@ -1,12 +1,10 @@
 from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends
 from FSBS.API.structures import schemas
+from FSBS.API.structures.schemas import User
 from FSBS.API.database import database_interface as dbi
 from FSBS.API.dependencies import get_db, get_current_user
 
-# Create an endpoint router
-from fastapi import APIRouter, Depends
-
-from FSBS.API.structures.schemas import User
 
 router = APIRouter(
     prefix='/api/users',

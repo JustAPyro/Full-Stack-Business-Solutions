@@ -1,9 +1,7 @@
-from fastapi import Depends
 from passlib.context import CryptContext
-from sqlalchemy.orm import Session
-from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Union
+from jose import jwt
 
 SECRET_KEY = "secret_key"
 ALGORITHM = "HS256"
