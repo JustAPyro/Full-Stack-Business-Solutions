@@ -1,5 +1,6 @@
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, JSON
 from FSBS.API.database.database import Base
 
 
@@ -48,8 +49,12 @@ class Purchase(Base):
 class APIRequest(Base):
     __tablename__ = 'api_requests'
     request_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, unique=False, nullable=True)
     endpoint = Column(String(255), unique=False, nullable=False)
     method = Column(String(255), unique=False, nullable=False)
+    query = Column(String(255), unique=False, nullable=True)
+    params = Column(JSONB, unique=False, nullable=True)
+    body = Column(JSONB, unique=False, nullable=True)
     caller_ip = Column(String(255), unique=False, nullable=False)
     caller_port = Column(Integer, unique=False, nullable=False)
     time = Column(DateTime, unique=False, nullable=False)

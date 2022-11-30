@@ -13,14 +13,20 @@ class TokenData(BaseModel):
 
 
 class APIRequestCreate(BaseModel):
+    user_id: Optional[int]
     method: str
     endpoint: str
+    query: Optional[str]
+    params: Optional[dict]
+    body: Optional[dict]
     caller_ip: str
     caller_port: int
     time: datetime.datetime
 
+
 class APIRequest(BaseModel):
     request_id: int
+
 
 class PurchaseBase(BaseModel):
     location: str
