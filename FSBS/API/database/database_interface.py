@@ -4,10 +4,15 @@ from FSBS.API.utility.auth import get_password_hash, verify_password
 import datetime
 
 
+def submit_request(db: Session, request: schemas.APIRequestCreate):
+    db_api_request = models.APIRequest(**request.dict())
+    db.add(db_api_request)
+    db.commit()
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
-        email=user.email,
-        password=get_password_hash(user.password),  # TODO: Hook this up to config
+        email=user.email.lower(),
+        password=get_password_hash(user.password),
         first_name=user.first_name,
         last_name=user.last_name,
         phone=user.phone,

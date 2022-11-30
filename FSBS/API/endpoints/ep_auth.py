@@ -18,7 +18,7 @@ router = APIRouter(
 @router.post('/token', response_model=Token)
 async def post_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # Get the user with our auth method
-    user = dbi.authenticate_user(db, form_data.username, form_data.password)
+    user = dbi.authenticate_user(db, form_data.username.lower(), form_data.password)
 
     if not user:
         raise HTTPException(

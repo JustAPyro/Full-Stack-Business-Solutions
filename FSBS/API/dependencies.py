@@ -36,6 +36,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 
+async def save_api_request():
+    pass
+
+
 def get_db():
     db = SessionLocal()
     try:
