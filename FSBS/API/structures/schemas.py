@@ -12,6 +12,16 @@ class TokenData(BaseModel):
     username: str | None = None
 
 
+class APIRequestCreate(BaseModel):
+    method: str
+    endpoint: str
+    caller_ip: str
+    caller_port: int
+    time: datetime.datetime
+
+class APIRequest(BaseModel):
+    request_id: int
+
 class PurchaseBase(BaseModel):
     location: str
     cost: int
