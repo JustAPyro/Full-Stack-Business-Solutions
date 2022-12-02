@@ -57,7 +57,8 @@ def post_purchase_batch(purchases: list[schemas.PurchaseCreate],
 @router.patch(
     path='/{purchase_id}',
     summary='Modify single purchase')
-def patch_purchase_single(purchase_modification: schemas.PurchaseModify,
+def patch_purchase_single(purchase_id: int,
+                          purchase_modification: schemas.PurchaseModify,
                           db: Session = Depends(get_db), 
                           user: User = Depends(get_current_user)):
     dbi.modify_purchase_by_id_with_user(db, purchase_id, purchase_modification, user.user_id)
@@ -66,11 +67,11 @@ def patch_purchase_single(purchase_modification: schemas.PurchaseModify,
 @router.patch(
     path='/',
     summary='Modify multiple purchases')
-def patch_purchase_multiple(purchase_modifications: list[schemas.PurchaseModify],
+def patch_purchase_multiple(purchase_modifications: dict[int, schemas.PurchaseModify],
                             db: Session = Depends(get_db),
                             user: User = Depends(get_current_user)):
-    for modification in purchase_modifications:
-        dbi.modify_purchase_by_id_with_user(db, modification.purchase_id, modification.modifications, user.user_id)
+    for p_id in purchase_modifications:
+        dbi.modify_purchase_by_id_with_user(db, p_id, purchase_modifications[p_id], user.user_id)
 
 @router.delete(
     path='/batch/',
