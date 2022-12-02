@@ -64,6 +64,10 @@ def get_purchase_by_id_with_user(db: Session, purchase_id: int, user_id: int):
             .filter(models.Purchase.user_id == user_id)
             .first())
 
+def modify_purchase_by_id_with_user(db: Session, purchase_id: int, purchase_modification: schemas.PurchaseModify, user_id: int):
+    # TODO: Implement
+    raise NotImplementedException()
+
 
 def delete_purchase_by_id_with_user(db: Session, purchase_id: int, user_id: int) -> bool:
     # First search db for a purchase with this id and user id
