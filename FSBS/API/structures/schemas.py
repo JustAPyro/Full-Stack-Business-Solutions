@@ -38,6 +38,11 @@ class PurchaseBase(BaseModel):
 class PurchaseCreate(PurchaseBase):
     pass
 
+class PurchaseModify(BaseModel):
+    location: Optional[str]
+    cost: Optional[int]
+    tax: Optional[int]
+    purchase_time: Optional[datetime.datetime]
 
 class Purchase(PurchaseBase):
     user_id: int
