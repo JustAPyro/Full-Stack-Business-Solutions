@@ -1,4 +1,9 @@
 /Runtimes/Python/venv/
+venv/
+
+.env
+data.db
+
 __pycache__/
 .idea/
 secrets.py
