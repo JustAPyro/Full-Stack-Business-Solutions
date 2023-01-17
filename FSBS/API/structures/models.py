@@ -7,6 +7,8 @@ from FSBS.API.database.database import Base
 class User(Base):
     __tablename__ = 'users'
     # Track which users have which modules enabled
+    # Finance
+    # Inventory
 
     # Primary key user ID and email which acts as username
     user_id = Column(Integer, primary_key=True, autoincrement=True)
