@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from .database.database import engine
 from .structures import models
-from .api import api
+from .api import raw_api, act_api
 
 # Generate database tables (Later convert this to Alembic)
 models.Base.metadata.create_all(bind=engine)
@@ -18,7 +18,8 @@ server = FastAPI(
 #api.include_router(ep_purchases.router)
 #api.include_router(ep_auth.router)
 
-server.include_router(api)
+server.include_router(raw_api)
+server.include_router(act_api)
 
 @server.get("/")
 async def root():
