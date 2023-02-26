@@ -27,7 +27,6 @@ class User(Base):
     date_last_active = Column(DateTime, nullable=False)
 
 
-
 #class Purchase(Base):
 #    __tablename__ = 'purchases'
 #
