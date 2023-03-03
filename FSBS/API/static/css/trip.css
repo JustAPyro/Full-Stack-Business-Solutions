@@ -1,0 +1,14 @@
+.card {
+    margin-top: 100px;
+    width: 80%;
+    background-color: lightgray;
+}
+
+.card .header{ 
+    background-color: darkgray;
+}
+
+.card .membercard {
+    margin: 0;
+    background-color: darkgrey;
+}

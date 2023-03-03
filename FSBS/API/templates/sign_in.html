@@ -1,0 +1,94 @@
+{% extends "root.html" %}
++
+
+{% block title %}Log in{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='/css/form.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+            <div class="card loginCard px-5 py-5" id="form1">
+
+                <form id="login-form" class="form-data" novalidate>
+                    <div class="forms-inputs mb-4"> <span>Email</span> <input id="email" class="form-control w-100" autocomplete="off" type="email" required>
+                        <div class="invalid-feedback">A valid email is required!</div>
+                    </div>
+                    <div class="forms-inputs w-100 mb-4"> <span>Password</span> <input id="password" class="w-100" autocomplete="off" type="password">
+                        <p class="text-right top"><a href="/reset-password/">Forgot password</a></p>
+                    </div>
+                    <div class="mb-3"> <button type="submit" class="btn btn-dark w-100">Login</button> </div>
+                    <p class="text-center">Don't have an account? <a href="/signup/">Sign up</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    async function formSubmit(event) {
+        // Note that this method always returns false- If it doesn't 
+        // then HTML will automatically redirect the page, which 
+        // we would rather avoid
+    
+        // Prevent the default form POST
+        event.preventDefault();
+    
+        // Get the form element values
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+    
+        // OWASP dictates that we should return a standard error regardless of if username or password is wrong.
+        // Note: NIST-800-63B S5.1.1.1 says that any password 8 characters or greater SHOULD be valid (regardless of caps or special characters)
+        // Bare minimum validation before sending to server
+        if (!RegExp("^(.+)@(.+)$").test(email)
+            || password.length < 8) {
+            alert('You have entered an invalid username or password.');
+            return false;
+        }
+    
+        // Construct a virtual form body to actually submit
+        const fd = new FormData();
+        fd.append('username', email)
+        fd.append('password', password)
+    
+        // Post to auth server and get token
+        const response = await fetch('/api/auth/token/', {
+            method: 'POST',
+            body: fd });
+        data = await response.json();
+    
+        // If the auth endpoint is down let them know
+        if (response.status === 404) {
+            alert('We\'re sorry! It seems our authorization server isn\'t responding. Try again later.')
+        }
+
+        // Check to see if the server validated user/name or password
+        if (response.status === 401) {
+            alert('You have entered an invalid username or password.')
+            return false;
+        }
+    
+        // Sanity check here (Server should only response with 401 || 200, but just in chase (You never know))
+        if (response.status !== 200) { throw new Error("/api/auth/token/ responded with something other than 200 or 401" || "Assertion failed"); }
+    
+        // Store token for later use
+        document.cookie = "token=bearer "+data.access_token;
+    
+        // And redirect user
+        location.href = '/user/'+data.username+'/'
+        return false;
+    }
+    document.getElementById('login-form').addEventListener("submit", formSubmit);
+</script>
+{% endblock %}
+
+
+
+
+

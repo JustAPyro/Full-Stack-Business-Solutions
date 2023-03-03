@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 act_api = APIRouter(
     prefix='/api/action',
     tags=['Actions']
